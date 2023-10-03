@@ -1,6 +1,6 @@
-const fs = require('node:fs'); // Loads in the file system module('fs) and stores it on fs variable.
+const getNotes = require('./notes.js')
 
-// writeFileSync writes data to a file. It can create a file and fill it as well.
-//fs.writeFileSync('notes.txt', 'My name is Shrek.')
+const msg = getNotes()
 
-fs.appendFileSync('notes.txt', ' Get out of my swamp!')
+console.log(msg)
+

@@ -1,10 +1,13 @@
 const chalk = require('chalk')
 const getNotes = require('./notes.js')
 
-const msg = getNotes()
+                        // this arrays index would target the "add" input provided after the 2 default location args load.
+const command = process.argv[2] // in the command line input "node app.js add". argv is an array of all the arguments provided.
 
-console.log(msg)
+console.log(process.argv) // after inputing "node app.js" you can add a space and then input more arguments such as "add"
 
-const greenMsg = chalk.bold.blue.inverse('Success!')
-
-console.log(greenMsg)
+if (command === 'add') { 
+    console.log('Adding note!')
+} else if (command ==='remove') {
+    console.log('Removing note!')
+}

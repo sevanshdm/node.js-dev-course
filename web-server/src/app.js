@@ -52,7 +52,7 @@ app.get('/weather', (req, res) => {
             error: 'You must provide an address.'
         })
     }
-                            // Destructuring of data object
+                            // Destructuring of data object           Default value in case nothing is inputed
     geocode(req.query.address, (error, {latitude, longitude, location} = {}) => {
         if (error) {
             return res.send({ error }) // shorthand for error: error

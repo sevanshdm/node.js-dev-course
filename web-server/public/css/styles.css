@@ -4,6 +4,14 @@ body {
     max-width: 650px;
     margin: 0 auto;
     padding: 0 16px;
+
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /*vh means viewport height*/
+}
+
+.main-content {
+    flex-grow: 1; /*This tells flex box to have main content take over all left over space*/
 }
 
 footer {
@@ -29,3 +37,6 @@ h1 {
     margin-bottom: 16px;
 }
 
+.portrait {
+    width: 250px;
+}

@@ -16,7 +16,7 @@ hbs.registerPartials(partialsPath)
 // Setup static directory to serve
 app.use(express.static(publicDirectoryPath))
 
-// index template
+// index template, These app.get() are express handlers. Info on query strings live on the req.
 app.get('', (req, res) => {
             //index.hbs from the views folder
     res.render('index',{
@@ -42,11 +42,31 @@ app.get('/help', (req,res) => {
     })
 })
 
-// app.com/weather
+// 
 app.get('/weather', (req, res) => {
+    if(!req.query.address) {
+        return res.send({
+            error: 'You must provide an address.'
+        })
+    }
+
     res.send({
         forecast: 'Nasty',
-        location: 'Thee Swamp'
+        location: 'Thee Swamp',
+        address: req.query.address // Is what was input into the query string.
+    })
+})
+
+app.get('/products', (req, res) => {
+    if (!req.query.search) {
+        return res.send({
+            error: 'You must provide a search term.'
+        })
+    }
+
+    console.log(req.query.search)
+    res.send({ //object sent as a static json
+        products: []
     })
 })
 

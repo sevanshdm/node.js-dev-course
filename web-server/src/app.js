@@ -1,6 +1,9 @@
 const path = require('path')
 const express = require('express')
 const hbs = require('hbs')
+const geocode = require('./utils/geocode')
+const forecast = require('./utils/forecast')
+
 const app = express()
 
 // Define paths for Express config
@@ -16,7 +19,7 @@ hbs.registerPartials(partialsPath)
 // Setup static directory to serve
 app.use(express.static(publicDirectoryPath))
 
-// index template
+// index template, These app.get() are express handlers. Info on query strings live on the req.
 app.get('', (req, res) => {
             //index.hbs from the views folder
     res.render('index',{
@@ -42,11 +45,43 @@ app.get('/help', (req,res) => {
     })
 })
 
-// app.com/weather
+// 
 app.get('/weather', (req, res) => {
-    res.send({
-        forecast: 'Nasty',
-        location: 'Thee Swamp'
+    if(!req.query.address) { // checks to see if an address wasn't put in query string.
+        return res.send({
+            error: 'You must provide an address.'
+        })
+    }
+                            // Destructuring of data object           Default value in case nothing is inputed
+    geocode(req.query.address, (error, {latitude, longitude, location} = {}) => {
+        if (error) {
+            return res.send({ error }) // shorthand for error: error
+        } 
+
+        forecast(latitude, longitude, (error, forecastData) => {
+            if (error) {
+                return res.send({error})
+            }
+
+            res.send({
+                forecast: forecastData,
+                location,
+                address: req.query.address 
+            })
+        })
+    })
+})
+
+app.get('/products', (req, res) => {
+    if (!req.query.search) {
+        return res.send({
+            error: 'You must provide a search term.'
+        })
+    }
+
+    console.log(req.query.search)
+    res.send({ //object sent as a static json
+        products: []
     })
 })
 

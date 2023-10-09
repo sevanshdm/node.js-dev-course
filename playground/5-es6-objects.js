@@ -39,10 +39,10 @@ const product = {
 // console.log(rating)
 // console.log(productLabel)
 
-                        // Destructuring of product object inline
-const transaction = (type, { label, stock }) => {
+                        // Destructuring of product object. The "=0" creates a default value of 0 incase no value is inputed.
+const transaction = (type, { label, stock = 0 } = {}) => { // the "={}" creates an empty default value for the parameter if nothing is inputed when function is called.
     console.log(type, label, stock)
 }
-
+                    // If this spot is empty, the default values are used.
 transaction('order', product)
 

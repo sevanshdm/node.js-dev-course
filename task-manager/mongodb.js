@@ -10,57 +10,37 @@ const { MongoClient, ObjectId } = require('mongodb')
 const connectionURL = 'mongodb://127.0.0.1:27017'
 const databaseName = 'task-manager'
 
-const id = new ObjectId() // Generate your own id's from the file
-console.log(id)
-
 MongoClient.connect(connectionURL, { useNewUrlParser: true }, (error, client) => {
     if (error) {
       return console.log('Unable to connect to database.')
     } 
 
     const db = client.db(databaseName)
+                                                // id is binary, that's why new ObjectId had to be used
+    db.collection('users').findOne({_id: new ObjectId('652595cdda5f9a0a18e5d3c6')},(error, user) => {
+        if (error) {
+            return console.log('Unable to fetch')
+        }
 
-    // db.collection('users').insertOne({ //inserts a simple document into the users collection
-    //     name: 'Henry',
-    //     age: '67'
-    // }, (error, results) => {
-    //     if(error) {
-    //         return console.log('Unable to insert user.')
-    //     }
+        console.log(user)
+    })
 
-    //     console.log(results.insertedId)
-    // })
-    
-    // db.collection('users').insertMany([
-    //     {
-    //         name: 'Donkey',
-    //         age: '36'
-    //     }, {
-    //         name: 'Gingy',
-    //         age: '127'
-    //     }
-    // ], (error, result) => {
-    //     if(error) {
-    //         return console.log('Unable to insert userts.')
-    //     }
+    // Finds and displays users with age of 127
+    db.collection('users').find({ age: 127 }).toArray((error, users) => {
+        console.log(users)
+    })
 
-    //     console.log(result.insertedIds)
+    // finds the amount of users with age of 127(count is deprecated)
+    // db.collection('users').find({ age: 127 }).count((error, count) => {
+    //     console.log(count)
     // })
 
-    // db.collection('tasks').insertMany([{
-    //     description: 'Clean the house',
-    //     completed: true
-    // },{
-    //     description: 'Renew inspection',
-    //     completed: false
-    // },{
-    //     description: 'Pot plants',
-    //     completed: false
-    // }], (error, result) => {
-    //     if(error) {
-    //         return console.log('Unable to insert tasks.')
-    //     }
+    db.collection('tasks').findOne({_id: new ObjectId('6525997b62efe327c616ba7f')}, (error, task) => {
+        console.log(task)
+    })
 
-    //     console.log(result.insertedIds)
-    // })
+    db.collection('tasks').find({ completed: false}).toArray((error, tasks) => {
+        console.log(tasks)
+    })
+
 })

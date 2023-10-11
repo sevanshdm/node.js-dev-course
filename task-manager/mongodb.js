@@ -16,31 +16,28 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true }, (error, client) =>
     } 
 
     const db = client.db(databaseName)
-                                                // id is binary, that's why new ObjectId had to be used
-    db.collection('users').findOne({_id: new ObjectId('652595cdda5f9a0a18e5d3c6')},(error, user) => {
-        if (error) {
-            return console.log('Unable to fetch')
-        }
-
-        console.log(user)
-    })
-
-    // Finds and displays users with age of 127
-    db.collection('users').find({ age: 127 }).toArray((error, users) => {
-        console.log(users)
-    })
-
-    // finds the amount of users with age of 127(count is deprecated)
-    // db.collection('users').find({ age: 127 }).count((error, count) => {
-    //     console.log(count)
+                                                
+    // db.collection('users').updateOne({
+    //     _id: new ObjectId("6525a834a3d7c4b287325a71"),
+    // }, {
+    //     $inc: {
+    //         age: 1
+    //     }
+    // }).then((result) => {
+    //     console.log(result)
+    // }).catch((error) => {
+    //     console.log(error)
     // })
 
-    db.collection('tasks').findOne({_id: new ObjectId('6525997b62efe327c616ba7f')}, (error, task) => {
-        console.log(task)
+    db.collection('tasks').updateMany({
+        completed: false
+    }, {
+        $set: {
+            completed: true
+        }
+    }).then((result) => {
+        console.log(result.modifiedCount)
+    }).catch((error) => {
+        console.log(error)
     })
-
-    db.collection('tasks').find({ completed: false}).toArray((error, tasks) => {
-        console.log(tasks)
-    })
-
 })

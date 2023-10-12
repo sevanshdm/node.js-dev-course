@@ -21,6 +21,32 @@ app.post('/users', (req, res)=> {
     })
 })
 
+// route handler for fetching multiple users
+app.get('/users', (req,res) => {
+    User.find({}).then((users) => { // leaving the object as empty fetches all users stored in the database
+        res.send(users)
+    }).catch((e) => {
+        res.status(500).send() // sends internal service error message
+    })
+})
+
+// route handler to fetch an individual user by ID
+     // (dynamic) the ID of the user trying to fetch with express's "route parameters" which are parts of the url that are used to capture dynamic values.
+app.get('/users/:id', (req,res) => {
+    const _id = req.params.id //matches with up above, this contains all the route parameters that were provided.
+
+    User.findById(_id).then((user) => {
+        if(!user) {
+            return res.status(404).send()
+        }
+
+        res.send(user)
+        
+    }).catch((e) => {
+        res.status(500).send()
+    })
+})
+
 app.post('/tasks', (req, res) => {
     const task = new Task(req.body)
 

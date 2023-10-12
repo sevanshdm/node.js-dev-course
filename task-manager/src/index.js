@@ -70,10 +70,10 @@ app.patch('/users/:id', async (req, res) =>{
     const isValidOperation = updates.every((update)=> allowedUpdates.includes(update)) // function runs for every item in the array
 
     if(!isValidOperation){
-        return res.status(400).send({ error: 'Invalid updates!'})
+        return res.status(400).send({ error: 'Invalid updates'})
     }
 
-    try {                                                       // The data for the id will passed through via the HTTP request.
+    try {                                                       // Where to apply change, The data for the id will passed through via the HTTP request.
         const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true }) // {new:true} returns the new user as opposed to the existing one found before update.
                                                                                      // runs validation before the update
         if(!user){
@@ -139,6 +139,27 @@ app.get('/tasks/:id', async (req,res)=>{
     // }).catch((e)=>{
     //     res.status(500).send()
     // })
+})
+
+app.patch('/tasks/:id', async (req, res)=>{
+    const updates = Object.keys(req.body)
+    const allowedUpdates = ['description', 'completed']
+    const isValidOperation = updates.every((update)=> allowedUpdates.includes(update))
+
+    if(!isValidOperation){
+        return res.status(400).send({error: 'Invalid updates'})
+    }
+
+    try{
+        const task = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+        if(!task){
+            res.status(404).send()
+        }
+        res.send(task)
+    }catch(e){
+        res.status(400).send(e)
+    }
+
 })
 
 app.listen(port, () => {

@@ -4,14 +4,19 @@ const User = require('../models/user')
 const router = new express.Router()
 
 // request handlers
+// Sign up a new user
 router.post('/users', async (req, res)=> {
     const user = new User(req.body)
 
     try {
         //saves the user
         await user.save()
+
+        // creates token for new user
+        const token = await user.generateAuthToken()
+
         // code below will run if the above line works.
-        res.status(201).send(user) //sends back the status (created) and result.
+        res.status(201).send({user, token}) //sends back the status (created) and result.
     }catch (e) {
         res.status(400).send(e) //sends back the status to the client so they know what kind of error it is.
     }
@@ -21,7 +26,8 @@ router.post('/users', async (req, res)=> {
 router.post('/users/login', async(req,res)=>{
     try {
         const user = await User.findByCredentials(req.body.email, req.body.password)
-        res.send(user)
+        const token = await user.generateAuthToken()
+        res.send({ user, token})
     }catch(e){
         res.status(400).send()
     }

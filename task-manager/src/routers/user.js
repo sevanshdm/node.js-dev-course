@@ -17,6 +17,16 @@ router.post('/users', async (req, res)=> {
     }
 })
 
+// finds/verifies a user with the correct credentials.
+router.post('/users/login', async(req,res)=>{
+    try {
+        const user = await User.findByCredentials(req.body.email, req.body.password)
+        res.send(user)
+    }catch(e){
+        res.status(400).send()
+    }
+})
+
 // route handler for fetching multiple users
 router.get('/users', async (req,res) => {
 
@@ -61,7 +71,7 @@ router.get('/users/:id', async (req,res) => {
 router.patch('/users/:id', async (req, res) =>{
     const updates = Object.keys(req.body) //converts an object into an array of its properties
     const allowedUpdates = ['name', 'email', 'password', 'age']
-    
+
     const isValidOperation = updates.every((update)=> allowedUpdates.includes(update)) // function runs for every item in the array
 
     if(!isValidOperation){

@@ -6,6 +6,20 @@ const taskRouter = require('./routers/task')
 const app = express()
 const port = process.env.PORT || 3000
 
+                // specific to registering middleware
+// app.use((req, res, next)=>{ // this function is going to run in between the request coming to the server and the route handler actually running.
+//         if(req.method === 'GET') {
+//             res.send('GET requests are disabled.')
+//         }else {
+//             next()
+//         }
+// })
+
+app.use((req, res, next)=>{
+        res.status(503).send('The site is under maintenance. Please try again later.')
+})
+
+
 // automatically parses incoming json into an object.
 app.use(express.json())
 

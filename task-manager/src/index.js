@@ -17,18 +17,16 @@ app.listen(port, () => {
     console.log('Server is up on port ' + port)
 })
 
-const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 
-const myFunction = async() => {
-    const password = 'Red12345!'                    //Number of rounds to perform
-    const hashedPassword = await bcrypt.hash(password, 8)
+const myFunction = async() => {  
+//Token creation.      object with data to be embedded    The signature /A secret that signs the token, making sure it hasn't be altered or tampered with.
+    const token = jwt.sign({_id: 'abc123'}, 'thisismynewcourse', { expiresIn: '1 second'}) 
+    console.log(token)
 
-    console.log(password)
-    console.log(hashedPassword)
-
-    // checks to see if the hashed password is the same
-    const isMatch = await bcrypt.compare('red12345!', hashedPassword)
-    console.log(isMatch)
+    // Verifies token
+    const data = jwt.verify(token, 'thisismynewcourse')
+    console.log(data)
 }
 
 myFunction()

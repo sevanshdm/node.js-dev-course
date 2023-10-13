@@ -15,9 +15,9 @@ const port = process.env.PORT || 3000
 //         }
 // })
 
-app.use((req, res, next)=>{
-        res.status(503).send('The site is under maintenance. Please try again later.')
-})
+// app.use((req, res, next)=>{
+//         res.status(503).send('The site is under maintenance. Please try again later.')
+// })
 
 
 // automatically parses incoming json into an object.

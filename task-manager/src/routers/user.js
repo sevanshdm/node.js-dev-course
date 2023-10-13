@@ -2,6 +2,7 @@ const express = require('express')
 const User = require('../models/user')
 // Use methods on router to customize it (router.post, router.get, router.patch, router.delete)
 const router = new express.Router()
+const auth = require('../middleware/auth')
 
 // request handlers
 // Sign up a new user
@@ -23,7 +24,7 @@ router.post('/users', async (req, res)=> {
 })
 
 // finds/verifies a user with the correct credentials.
-router.post('/users/login', async(req,res)=>{
+router.post('/users/login', async(req, res)=>{
     try {
         const user = await User.findByCredentials(req.body.email, req.body.password)
         const token = await user.generateAuthToken()
@@ -34,14 +35,9 @@ router.post('/users/login', async(req,res)=>{
 })
 
 // route handler for fetching multiple users
-router.get('/users', async (req,res) => {
-
-    try {
-        const users = await User.find({}) // leaving the object as empty fetches all users stored in the database
-        res.send(users)
-    }catch(e){
-        res.status(500).send() // sends internal service error message
-    }
+router.get('/users/me', auth, async (req,res) => { // when /users receives a GET request, it first runs the middleware(auth), then it runs route handler.
+    res.send(req.user)
+//const users = await User.find({}) // leaving the object as empty fetches all users stored in the database
 })
 
 // route handler to fetch an individual user by ID

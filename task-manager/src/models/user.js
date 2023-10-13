@@ -48,10 +48,10 @@ const userSchema = new mongoose.Schema({
         }
     }]
 })
-            // method we created, is accessible on instances. sometimes called instance medthods.
+            // method we created, is accessible on instances. sometimes called instance methods.
 userSchema.methods.generateAuthToken = async function () {
-    const user = this
-    const token = jwt.sign({ _id: user._id.toString() },'thisismynewcourse')
+    const user = this       
+    const token = jwt.sign({ _id: user._id.toString() },'thisismynewcourse') // creates token
 
     user.tokens = user.tokens.concat({ token }) // adds the token created above to the array of tokens in the model(tokens).
     await user.save()

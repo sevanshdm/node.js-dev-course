@@ -1,7 +1,8 @@
 const mongoose = require('mongoose')
 const validator = require('validator')
+const bcrypt = require('bcryptjs')
 
-const User = mongoose.model('User', {
+const userSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -39,6 +40,22 @@ const User = mongoose.model('User', {
         }
     }
 })
+
+//      pre is for doing something before an event, .post would be for after an event.
+userSchema.pre('save', async function(next) { // pre(name of event, function to run*must be a standard function*)
+    const user = this               
+    
+    // If user updates password, hash it.
+    if(user.isModified('password')) {   //thing to hash, number of rounds to hash it.
+        user.password = await bcrypt.hash(user.password, 8)
+    }
+
+    // call next when your done. if next is never called, the code runs forever.
+    next()
+})
+
+                                // if you put in an object as the second argument, mongoose converts it into a schema
+const User = mongoose.model('User', userSchema)
 
 // const me = new User({
 //     name: '  Shrek  ',

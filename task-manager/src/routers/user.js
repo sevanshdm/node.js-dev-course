@@ -61,15 +61,19 @@ router.get('/users/:id', async (req,res) => {
 router.patch('/users/:id', async (req, res) =>{
     const updates = Object.keys(req.body) //converts an object into an array of its properties
     const allowedUpdates = ['name', 'email', 'password', 'age']
+    
     const isValidOperation = updates.every((update)=> allowedUpdates.includes(update)) // function runs for every item in the array
 
     if(!isValidOperation){
         return res.status(400).send({ error: 'Invalid updates'})
     }
 
-    try {                                                       // Where to apply change, The data for the id will passed through via the HTTP request.
-        const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true }) // {new:true} returns the new user as opposed to the existing one found before update.
-                                                                                     // runs validation before the update
+    try { // Where to apply change, The data for the id will passed through via the HTTP request.
+        const user = await User.findById(req.params.id)
+
+        updates.forEach((update)=> user[update] = req.body[update])
+        await user.save()
+
         if(!user){
             return res.status(404).send()
         }

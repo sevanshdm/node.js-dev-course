@@ -49,6 +49,14 @@ const userSchema = new mongoose.Schema({
     }]
 })
 
+// Virtual Property: Is not actual data stored in the database, it's a relationship between two entities (user and task)
+            //name of virt field
+userSchema.virtual('tasks', { // configure individual fields
+    ref: 'Task',
+    localField: '_id', // where the local data is stored(user*here*)
+    foreignField: 'owner' // name of the field on the other thing (task)
+})
+
 userSchema.methods.toJSON = function () {
     const user = this
     const userObject = user.toObject() // gives just the raw profile data

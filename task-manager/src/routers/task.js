@@ -1,10 +1,13 @@
 const express = require('express')
 const Task = require('../models/task')
-const User = require('../models/user')
+const auth = require('../middleware/auth')
 const router = new express.Router()
 
-router.post('/tasks', async(req, res) => {
-    const task = new Task(req.body)
+router.post('/tasks', auth, async(req, res) => {
+    const task = new Task({
+        ...req.body, // copies all of the properties from body over to the Task object.
+        owner: req.user._id // The id of the person that was just authenticated. 
+    })
 
     try{
         await task.save()

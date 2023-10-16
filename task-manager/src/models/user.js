@@ -48,6 +48,17 @@ const userSchema = new mongoose.Schema({
         }
     }]
 })
+
+userSchema.methods.toJSON = function () {
+    const user = this
+    const userObject = user.toObject() // gives just the raw profile data
+
+    delete userObject.password
+    delete userObject.tokens
+
+    return userObject
+}
+
             // method we created, is accessible on instances. sometimes called instance methods.
 userSchema.methods.generateAuthToken = async function () {
     const user = this       

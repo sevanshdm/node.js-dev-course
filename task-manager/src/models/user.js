@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const validator = require('validator')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const Task = require('./task')
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -105,6 +106,19 @@ userSchema.pre('save', async function(next) { // pre(name of event, function to 
 
     // call next when your done. if next is never called, the code runs forever.
     next()
+})
+
+// Delete user tasks when user is removed
+userSchema.pre('deleteOne', {document: true, query: false }, async function (next) {
+    const user = this
+    try{
+        await Task.deleteMany({ owner: user._id})
+
+        next()
+    }catch(e){
+        console.log(e)
+    }
+
 })
 
                                 // if you put in an object as the second argument, mongoose converts it into a schema

@@ -94,9 +94,9 @@ router.delete('/users/me', auth, async (req, res) => {
         //     return res.status(404).send()
         // }
 
-        await req.user.remove()
+        await req.user.deleteOne({id: req.user._id})
         
-        res.send(user)
+        res.send(req.user.getPublicProfile())
     }catch(e){
         res.status(500).send()
     }

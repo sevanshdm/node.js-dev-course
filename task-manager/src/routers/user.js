@@ -34,6 +34,16 @@ router.post('/users/login', async(req, res)=>{
     }
 })
 
+router.post('/users/logout', auth, async (req, res) => {
+    try {
+        req.user.tokens = req.user.token.filter((token)=>{
+            return token.token !== req.token
+        })
+    }catch (e) {
+
+    }
+})
+
 // route handler for fetching multiple users
 router.get('/users/me', auth, async (req,res) => { // when /users receives a GET request, it first runs the middleware(auth), then it runs route handler.
     res.send(req.user)

@@ -12,6 +12,7 @@ const auth = async (req, res, next) => { // this function is going to run in bet
             throw new Error()
         }
 
+        req.token = token
         req.user = user
         next()
     }catch (e) {

@@ -48,6 +48,8 @@ const userSchema = new mongoose.Schema({
             required: true
         }
     }]
+}, { // Schema options
+    timestamps: true
 })
 
 // Virtual Property: Is not actual data stored in the database, it's a relationship between two entities (user and task)

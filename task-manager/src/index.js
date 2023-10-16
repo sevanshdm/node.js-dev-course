@@ -34,17 +34,17 @@ app.listen(port, () => {
 const Task = require('./models/task')
 const User = require('./models/user')
 
-const main = async () => {
-    // const task = await Task.findById('652d5bf932ab728090a6c0ae')
-    // await task.populate('owner') //allows you to populate data from a relationship, such as the data we have from owner.
-    // console.log(task.owner)
+// const main = async () => {
+//     // const task = await Task.findById('652d5bf932ab728090a6c0ae')
+//     // await task.populate('owner') //allows you to populate data from a relationship, such as the data we have from owner.
+//     // console.log(task.owner)
 
-    const user = await User.findById('652d5a4cecd222432b1ddf0a')
-    await user.populate('tasks')
-    console.log(user.tasks)
-}
+//     const user = await User.findById('652d5a4cecd222432b1ddf0a')
+//     await user.populate('tasks')
+//     console.log(user.tasks)
+// }
 
-main()
+// main()
 
 // const jwt = require('jsonwebtoken')
 

@@ -23,6 +23,7 @@ router.post('/tasks', auth, async(req, res) => {
 })
 
 // GET /tasks?completed=true or false
+// GET/ tasks?limit=10&skip=0 (pagination) skip 10 would be second set of 10 result, skip 20 would be the third etc
 router.get('/tasks', auth, async(req, res) => {
     const match = {}
 
@@ -33,7 +34,11 @@ router.get('/tasks', auth, async(req, res) => {
     try {
         await req.user.populate({
             path:'tasks', 
-            match // is an object where you can specify which tasks you're trying to match.
+            match, // is an object where you can specify which tasks you're trying to match.
+            options: { //can be used for pagination and also for sorting
+                limit: parseInt(req.query.limit), // taking the query string and parsing the limit from a string into a int value for this option.
+                skip: parseInt(req.query.skip)
+            }
         })
 
         res.send(req.user.tasks)

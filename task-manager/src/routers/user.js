@@ -3,6 +3,8 @@ const User = require('../models/user')
 // Use methods on router to customize it (router.post, router.get, router.patch, router.delete)
 const router = new express.Router()
 const auth = require('../middleware/auth')
+const multer = require('multer')
+
 // request handlers
 // Sign up a new user
 router.post('/users', async (req, res)=> {
@@ -100,6 +102,14 @@ router.delete('/users/me', auth, async (req, res) => {
     }catch(e){
         res.status(500).send()
     }
+})
+
+const upload = multer({
+    dest: 'avatars'
+})
+                                // Multer middleware
+router.post('/users/me/avatar', upload.single('avatar'), (req, res) => {
+    res.send()
 })
 
 module.exports = router

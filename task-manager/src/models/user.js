@@ -47,7 +47,10 @@ const userSchema = new mongoose.Schema({
             type: String,
             required: true
         }
-    }]
+    }],
+    avatar: {
+        type: Buffer // this allow you to store the buffer with the binary img data in the database alongside of the user who the img belongs to.
+    }
 }, { // Schema options
     timestamps: true
 })

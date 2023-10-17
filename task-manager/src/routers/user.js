@@ -105,7 +105,7 @@ router.delete('/users/me', auth, async (req, res) => {
 })
 
 const upload = multer({
-    dest: 'avatars',
+    //dest: 'avatars', // if this was here, multer would save the images to the avatars dir. Without this line, the data gets passed through to funct on line 125.
     limits: {
         fileSize: 1000000 //1mb
     },           //object, callback
@@ -121,11 +121,21 @@ const upload = multer({
         // cb(undefined, false) // silently rejects file
     }
 })
-                                // Multer middleware
-router.post('/users/me/avatar', upload.single('avatar'), (req, res) => { // route handler call
+                                     // Multer middleware
+router.post('/users/me/avatar', auth, upload.single('avatar'), async (req, res) => { // route handler call
+    // this only works when there isn't a dest option set up(line 108)
+    req.user.avatar = req.file.buffer // file(object which contains all of the properties about the file) buffer(contains a buffer of all the binary data for that file)
+    await req.user.save()
     res.send()
 }, (error, req, res, next)=>{ // this lets express know that this is the function set up to handle any uncaught errors.
     res.status(400).send({error: error.message}) // correctly handles errors when something goes wrong.
+})
+
+// deletes user avatar
+router.delete('/users/me/avatar', auth, async(req,res)=>{
+    req.user.avater = undefined
+    await req.user.save()
+    res.send()
 })
 
 module.exports = router

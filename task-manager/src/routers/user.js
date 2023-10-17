@@ -133,9 +133,25 @@ router.post('/users/me/avatar', auth, upload.single('avatar'), async (req, res) 
 
 // deletes user avatar
 router.delete('/users/me/avatar', auth, async(req,res)=>{
-    req.user.avater = undefined
+    req.user.avatar = undefined
     await req.user.save()
     res.send()
+})
+
+// access the image for a user by their id.
+router.get('/user/:id/avatar', async(req, res)=>{
+    try {
+        const user = await User.findById(req.params.id)
+
+        if(!user || ! user.avatar){
+            throw new Error()
+        }
+
+        res.set('Content-Type', 'image/jpg') // response header
+        res.send(user.avatar)
+    }catch(e){
+        res.status(404).send()
+    }
 })
 
 module.exports = router

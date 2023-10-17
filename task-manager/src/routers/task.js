@@ -22,11 +22,34 @@ router.post('/tasks', auth, async(req, res) => {
     // })
 })
 
-// gets all tasks
+// GET /tasks?completed=true or false
+// GET/ tasks?limit=10&skip=0 (pagination) skip 10 would be second set of 10 result, skip 20 would be the third etc
+// GET/ tasks?sortBy=createdAt:asc or :desc
 router.get('/tasks', auth, async(req, res) => {
+    const match = {}
+    const sort = {} // 1 is ascending, -1 is descending
+
+    if (req.query.completed) {
+        match.completed = req.query.completed === 'true'
+    }
+
+    if (req.query.sortBy){
+        const parts = req.query.sortBy.split(':')
+        sort[parts[0]] = parts[1] === 'desc' ? -1 : 1 //value comes from parts array and using it as name of property for sort.
+    }
+
     try {
-        const tasks = await Task.find({ owner: req.user._id })
-        res.send(tasks)
+        await req.user.populate({
+            path:'tasks', 
+            match, // is an object where you can specify which tasks you're trying to match.
+            options: { //can be used for pagination and also for sorting
+                limit: parseInt(req.query.limit), // taking the query string and parsing the limit from a string into a int value for this option.
+                skip: parseInt(req.query.skip),
+                sort
+            }
+        })
+
+        res.send(req.user.tasks)
     }catch(e){
         res.status(500).send()
 

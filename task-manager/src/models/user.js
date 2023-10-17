@@ -47,7 +47,12 @@ const userSchema = new mongoose.Schema({
             type: String,
             required: true
         }
-    }]
+    }],
+    avatar: {
+        type: Buffer // this allow you to store the buffer with the binary img data in the database alongside of the user who the img belongs to.
+    }
+}, { // Schema options
+    timestamps: true
 })
 
 // Virtual Property: Is not actual data stored in the database, it's a relationship between two entities (user and task)
@@ -64,6 +69,7 @@ userSchema.methods.toJSON = function () {
 
     delete userObject.password
     delete userObject.tokens
+    delete userObject.avatar
 
     return userObject
 }

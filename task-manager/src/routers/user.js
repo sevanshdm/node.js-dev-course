@@ -4,6 +4,7 @@ const User = require('../models/user')
 const router = new express.Router()
 const auth = require('../middleware/auth')
 const multer = require('multer')
+const sharp = require('sharp')
 
 // request handlers
 // Sign up a new user
@@ -123,8 +124,10 @@ const upload = multer({
 })
                                      // Multer middleware
 router.post('/users/me/avatar', auth, upload.single('avatar'), async (req, res) => { // route handler call
+    const buffer = await sharp(req.file.buffer).resize({ width: 250, height: 250 }).png().toBuffer() //takes img buffer data, resizes img, converts it to png and returns it as a buffer.
+
     // this only works when there isn't a dest option set up(line 108)
-    req.user.avatar = req.file.buffer // file(object which contains all of the properties about the file) buffer(contains a buffer of all the binary data for that file)
+    req.user.avatar = buffer // file(object which contains all of the properties about the file) buffer(contains a buffer of all the binary data for that file)
     await req.user.save()
     res.send()
 }, (error, req, res, next)=>{ // this lets express know that this is the function set up to handle any uncaught errors.
@@ -147,7 +150,7 @@ router.get('/user/:id/avatar', async(req, res)=>{
             throw new Error()
         }
 
-        res.set('Content-Type', 'image/jpg') // response header
+        res.set('Content-Type', 'image/png') // response header
         res.send(user.avatar)
     }catch(e){
         res.status(404).send()

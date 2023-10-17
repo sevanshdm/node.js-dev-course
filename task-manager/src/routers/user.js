@@ -113,7 +113,7 @@ const upload = multer({
         if(!file.originalname.match(/\.(jpg|jpeg|png)$/)) { // this is a regular expression //(!file.originalname.endsWith('.pdf')) { // only accepts media files
             return cb(new Error('Please upload an image.'))
         }
-        
+
         cb(undefined, true)
 
         // cb(new Error('File must be a PDF')) // error
@@ -122,8 +122,10 @@ const upload = multer({
     }
 })
                                 // Multer middleware
-router.post('/users/me/avatar', upload.single('avatar'), (req, res) => {
+router.post('/users/me/avatar', upload.single('avatar'), (req, res) => { // route handler call
     res.send()
+}, (error, req, res, next)=>{ // this lets express know that this is the function set up to handle any uncaught errors.
+    res.status(400).send({error: error.message}) // correctly handles errors when something goes wrong.
 })
 
 module.exports = router

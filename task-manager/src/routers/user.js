@@ -105,7 +105,21 @@ router.delete('/users/me', auth, async (req, res) => {
 })
 
 const upload = multer({
-    dest: 'avatars'
+    dest: 'avatars',
+    limits: {
+        fileSize: 1000000 //1mb
+    },           //object, callback
+    fileFilter(req, file, cb){ //function that runs when a new file is attempted to be uploaded.
+        if(!file.originalname.match(/\.(jpg|jpeg|png)$/)) { // this is a regular expression //(!file.originalname.endsWith('.pdf')) { // only accepts media files
+            return cb(new Error('Please upload an image.'))
+        }
+        
+        cb(undefined, true)
+
+        // cb(new Error('File must be a PDF')) // error
+        // cb(undefined, true) // if things go right
+        // cb(undefined, false) // silently rejects file
+    }
 })
                                 // Multer middleware
 router.post('/users/me/avatar', upload.single('avatar'), (req, res) => {

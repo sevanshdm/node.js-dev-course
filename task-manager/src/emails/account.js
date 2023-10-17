@@ -1,8 +1,8 @@
 const sgMail = require('@sendgrid/mail')
 
-const sendgridAPIKey = 'Insert Key Here'
+// const sendgridAPIKey = 'Insert Key Here' this is now in dev.env as an environment variable.
 
-sgMail.setApiKey(sendgridAPIKey)
+sgMail.setApiKey(process.env.SENDGRID_API_KEY) // gets api key from environment variable in dev.env
 
 const sendWelcomeEmail = (email, name) =>{
     sgMail.send({

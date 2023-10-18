@@ -3,6 +3,7 @@ const User = require('../models/user')
 // Use methods on router to customize it (router.post, router.get, router.patch, router.delete)
 const router = new express.Router()
 const auth = require('../middleware/auth')
+const { sendWelcomeEmail, sendCancelationEmail } = require('../emails/account')
 const multer = require('multer')
 const sharp = require('sharp')
 
@@ -14,6 +15,8 @@ router.post('/users', async (req, res)=> {
     try {
         //saves the user
         await user.save()
+
+        sendWelcomeEmail(user.email, user.name) // this is from account.js in emails folder
 
         // creates token for new user
         const token = await user.generateAuthToken()
@@ -98,6 +101,8 @@ router.delete('/users/me', auth, async (req, res) => {
         // }
 
         await req.user.deleteOne({id: req.user._id})
+
+        sendCancelationEmail(req.user.email, req.user.name)
         
         res.send(req.user.getPublicProfile())
     }catch(e){

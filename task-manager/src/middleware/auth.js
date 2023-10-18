@@ -5,7 +5,7 @@ const User = require('../models/user')
 const auth = async (req, res, next) => { // this function is going to run in between the request coming to the server and the route handler actually running.
     try {           // returns str token value    // removes the beginning portion(bearer)
         const token = req.header('Authorization').replace('Bearer ', '')
-        const decoded = jwt.verify(token, 'thisismynewcourse')
+        const decoded = jwt.verify(token, process.env.JWT_SECRET)
         const user = await User.findOne({ _id: decoded._id, 'tokens.token': token })
 
         if(!user){
